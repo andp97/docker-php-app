@@ -19,8 +19,8 @@ docker-compose build app
 docker-compose up -d
 docker-compose exec app composer create-project --prefer-dist laravel/laravel $TMP_DIR
 mv $TMP_DIR/* .
-mv $TMP_DIR/.{editorconfig,env,env.example,gitattributes,gitignore} .
-
+mv $TMP_DIR/.{editorconfig,env,env.example,gitattributes,gitignore,styleci.yml} .
+rm -rf $TMP_DIR
 git init
 
 cd ../
