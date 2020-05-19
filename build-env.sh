@@ -10,7 +10,10 @@ mkdir -p docker-compose/nginx
 mkdir -p docker-compose/mysql
 
 #Download file
+wget https://raw.githubusercontent.com/andp97/docker-php-app/master/docker-compose.yml
+wget https://raw.githubusercontent.com/andp97/docker-php-app/master/Dockerfile
 
+sed -i "s/main_php_app_img/$APP_NAME/g" docker-compose.yml
 
 docker-compose build app
 docker-compose up -d
@@ -20,8 +23,5 @@ mv $TMP_DIR/.{editorconfig,env,env.example,gitattributes,gitignore} .
 
 git init
 
-
-
 cd ../
-
 exit 0
