@@ -1,4 +1,5 @@
 #!/bin/bash
+
 APP_NAME=$1
 TMP_DIR="tmp_dir"
 RND_PW=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
@@ -24,7 +25,7 @@ sed -i "s/\/opt\/mysql-docker/\/opt\/mysql-docker\/$CURR_USR\/$APP_NAME/g" docke
 
 echo -e "Building docker image $APP_NAME from Dockerfile\n"
 
-docker-compose build app >> /dev/null
+docker-compose build app >> /dev/null || $(echo "Error Build docker img" && exit 0)
 docker-compose up -d
 docker-compose exec app composer create-project --prefer-dist laravel/laravel $TMP_DIR
 mv $TMP_DIR/* .
