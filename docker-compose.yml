@@ -13,7 +13,7 @@ services:
   app:
     build:
       args:
-        user: sammy
+        user: appuser
         uid: 1000
       context: ./
       dockerfile: Dockerfile
