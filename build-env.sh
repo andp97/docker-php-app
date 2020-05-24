@@ -12,8 +12,7 @@ cd ../$APP_NAME
 mkdir -p docker-compose/nginx
 mkdir -p docker-compose/mysql
 
-sudo mkdir -p /opt/mysql-docker/$CURR_USR/$APP_NAME
-sudo chown -R $CURR_USR. /opt/mysql-docker/$CURR_USR/
+sudo mkdir -p /opt/mysql-docker/
 
 #Download file
 cp ../docker-php-app/docker-compose.yml docker-compose.yml || wget https://raw.githubusercontent.com/andp97/docker-php-app/master/docker-compose.yml
@@ -21,7 +20,6 @@ cp ../docker-php-app/Dockerfile Dockerfile || wget https://raw.githubusercontent
 cp ../docker-php-app/docker-compose/nginx/app.conf docker-compose/nginx/app.conf || https://raw.githubusercontent.com/andp97/docker-php-app/master/docker-compose/nginx/app.conf
 
 sed -i "s/main_php_app_img/$APP_NAME/g" docker-compose.yml
-sed -i "s/\/opt\/mysql-docker/\/opt\/mysql-docker\/$CURR_USR\/$APP_NAME/g" docker-compose.yml
 
 echo -e "Building docker image $APP_NAME from Dockerfile\n"
 
