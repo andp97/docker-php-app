@@ -12,8 +12,10 @@ cd ../$APP_NAME
 mkdir -p docker-compose/nginx
 mkdir -p docker-compose/mysql
 
-sudo mkdir -p /opt/mysql-docker/
-
+if test -f "/opt/mysql-docker/"; then
+else
+	sudo mkdir -p /opt/mysql-docker/
+fi
 #Download file
 cp ../docker-php-app/docker-compose.yml docker-compose.yml || wget https://raw.githubusercontent.com/andp97/docker-php-app/master/docker-compose.yml
 cp ../docker-php-app/Dockerfile Dockerfile || wget https://raw.githubusercontent.com/andp97/docker-php-app/master/Dockerfile
