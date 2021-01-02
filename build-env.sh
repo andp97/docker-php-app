@@ -1,25 +1,50 @@
 #!/bin/bash
+CURR_PWD=$(pwd)
+PROJECTS_DIR="$HOME/projects"
+DOCKER_PHP_APP_DIR="$PROJECTS_DIR/docker-php-app"
+
+if -d $DOCKER_PHP_APP_DIR then
+	echo -n "Check for updates: cd $DOCKER_PHP_APP_DIR && git pull"
+else
+	cd $PROJECTS_DIR && git clone https://github.com/andp97/docker-php-app.git
+	cd $PWD
+fi
 
 APP_NAME=$1
-TMP_DIR="tmp_dir"
+if -z $APP_NAME then
+	echo "Invalid APP_NAME"
+	exit 1
+fi
+
+APP_NAME=$(echo $APP_NAME | sed 's/ /_/g')
+
+DEFAULT_APP_DIR="$PROJECTS_DIR/$APP_NAME"
+
+TMP_DIR="/tmp/.docker-php-app-"
 RND_PW=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
-echo -e "Createing dir ../$APP_NAME\n"
+RND_DIR=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
+echo -e "Createing dir $DEFAULT_APP_DIR\n"
+
+TMP_DIR="$TMP_DIR$RND_DIR"
 
 CURR_USR=$(whoami)
 
-mkdir -p ../$APP_NAME
-cd ../$APP_NAME
+mkdir -p $DEFAULT_APP_DIR
+cd $DEFAULT_APP_DIR
 mkdir -p docker-compose/nginx
 mkdir -p docker-compose/mysql
 
-if test -f "/opt/mysql-docker/"; then
+APP_DB_PATH="$DEFAULT_APP_DIR/.db/"
+
+if test -f $APP_DB_PATH; then
 else
-	sudo mkdir -p /opt/mysql-docker/
+	sudo mkdir -p $APP_DB_PATH
 fi
 #Download file
-cp ../docker-php-app/docker-compose.yml docker-compose.yml || wget https://raw.githubusercontent.com/andp97/docker-php-app/master/docker-compose.yml
-cp ../docker-php-app/Dockerfile Dockerfile || wget https://raw.githubusercontent.com/andp97/docker-php-app/master/Dockerfile
-cp ../docker-php-app/docker-compose/nginx/app.conf docker-compose/nginx/app.conf || https://raw.githubusercontent.com/andp97/docker-php-app/master/docker-compose/nginx/app.conf
+
+cp $DOCKER_PHP_APP_DIR/docker-compose.yml docker-compose.yml
+cp $DOCKER_PHP_APP_DIR/Dockerfile Dockerfile
+cp $DOCKER_PHP_APP_DIR/docker-compose/nginx/app.conf docker-compose/nginx/app.conf
 
 sed -i "s/main_php_app_img/$APP_NAME/g" docker-compose.yml
 
@@ -46,6 +71,9 @@ if test -f "$ENV_FILE"; then
 
 fi
 
+echo ".db/" >> $DEFAULT_APP_DIR/.gitignore
+
 docker-compose ps
+
 
 exit 0

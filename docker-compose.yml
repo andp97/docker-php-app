@@ -9,7 +9,7 @@ services:
       - ./:/var/www
       - ./docker-compose/nginx:/etc/nginx/conf.d
     networks:
-      - app_net
+      - main_php_app_img-net
   app:
     build:
       args:
@@ -23,8 +23,8 @@ services:
     volumes:
       - ./:/var/www
     networks:
-      - app_net
-  db:
+      - main_php_app_img-net
+  db-main_php_app_img:
     image: mysql:5.7
     restart: unless-stopped
     ports:
@@ -38,10 +38,10 @@ services:
       SERVICE_NAME: mysql
     volumes:
       - ./docker-compose/mysql:/docker-entrypoint-initdb.d
-      - /opt/mysql-docker:/var/lib/mysql
+      - ./db:/var/lib/mysql
     networks:
-      - app_net
+      - main_php_app_img-net
 networks:
-  app_net:
+  main_php_app_img-net:
     driver: bridge
 
